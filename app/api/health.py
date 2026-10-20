@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import Blueprint, jsonify
 from sqlalchemy import text
 
@@ -12,6 +14,12 @@ def health():
     try:
         db.session.execute(text("SELECT 1"))
     except Exception:
-        return jsonify(status="error", database="unreachable"), 503
+        return (
+            jsonify(
+                status=HTTPStatus.SERVICE_UNAVAILABLE.phrase,
+                database="unreachable",
+            ),
+            HTTPStatus.SERVICE_UNAVAILABLE,
+        )
 
-    return jsonify(status="ok", database="ok"), 200
+    return jsonify(status=HTTPStatus.OK.phrase, database="ok"), HTTPStatus.OK
