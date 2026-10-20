@@ -3,10 +3,13 @@ from flask import Flask
 from app.api.health import health_bp
 from app.config import config_by_name, get_config_name
 from app.extensions import db, migrate
+from app.logging_config import configure_logging
 
 
 def create_app(config_name: str | None = None) -> Flask:
     """Application factory."""
+    configure_logging()
+
     app = Flask(__name__)
 
     config_name = config_name or get_config_name()
